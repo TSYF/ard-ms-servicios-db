@@ -1,11 +1,10 @@
-import { envs } from '@/config/env';
 import { ErrorBody } from '@/types/ErrorBody';
 import { CommonResponseBody } from '@/types/CommonResponseBody';
 import express from 'express';
 import { matches } from '@/utils';
-import { Product, productMatcher } from '../types/Product';
+import { Service, serviceMatcher } from '../types/Service';
 import { db } from '@/db';
-import { productModel } from '@/db/schemas';
+import { serviceModel } from '@/db/schemas';
 import { eq, inArray } from 'drizzle-orm';
 const router = express.Router();
 
@@ -13,16 +12,16 @@ const router = express.Router();
 router.get(
     "/",
     async (req, res) => {
-        const products: Product[] = await db
+        const services: Service[] = await db
             .select()
-            .from(productModel);
+            .from(serviceModel);
         
-        if (Array.isArray(products)) {
-            res.status(200).send(products);
+        if (Array.isArray(services)) {
+            res.status(200).send(services);
         } else {
             const CODE = 500;
             const error: ErrorBody = {
-                private: "La lista de productos no pasa el typecheck de array en Index",
+                private: "La lista de servicios no pasa el typecheck de array en Index",
                 public: new CommonResponseBody(
                     false,
                     CODE,
@@ -43,15 +42,14 @@ router.get(
     async (req, res) => {
         const { id } = req.params;
 
-        const products: Product[] = await db
+        const service: Service = (await db
             .select()
-            .from(productModel)
-            .where(eq(productModel.id, +id));
-        const product = products[0];
+            .from(serviceModel)
+            .where(eq(serviceModel.id, +id)))[0];
         
-        console.log(product)
+        console.log(service)
         console.log(id)
-        res.status(200).send(product);
+        res.status(200).send(service);
     }
 );
 
@@ -61,12 +59,12 @@ router.get(
     async (req, res) => {
         const { ids } = req.body;
 
-        const products: Product[] = await db
+        const services: Service[] = await db
             .select()
-            .from(productModel)
-            .where(inArray(productModel.id, ids.split(",")));
+            .from(serviceModel)
+            .where(inArray(serviceModel.id, ids.split(",")));
             
-        res.status(200).send(products);
+        res.status(200).send(services);
     }
 );
 
@@ -75,35 +73,35 @@ router.post(
     "/",
     async (req, res) => {
 
-        const product = req.body;
-        console.table(product);
+        const service = req.body;
+        console.table(service);
 
-        if (!matches(product, productMatcher)) {
+        if (!matches(service, serviceMatcher)) {
             const CODE = 422;
             
             const error: ErrorBody = {
-                private: "La forma del cuerpo no corresponde al Producto",
+                private: "La forma del cuerpo no corresponde al Servicio",
                 public: new CommonResponseBody(
                     false,
                     CODE,
                     {
-                        message: "La forma del cuerpo no corresponde al Producto"
+                        message: "La forma del cuerpo no corresponde al Servicio"
                     }
                 )
             }
-            console.table(product);
+            console.table(service);
             console.log(error.private);
             console.error(error.errorObject)
             res.status(CODE).send(error.public);
             return;
         }
 
-        console.table(product);
+        console.table(service);
 
-        const insertedProduct = (await db.insert(productModel).values(product).returning())[0];
+        const insertedService = (await db.insert(serviceModel).values(service).returning())[0];
 
 
-        if (!insertedProduct) {
+        if (!insertedService) {
             const CODE = 500;
 
             const error: ErrorBody = {
@@ -122,7 +120,7 @@ router.post(
             return;
         }
 
-        res.status(200).send(insertedProduct);
+        res.status(200).send(insertedService);
     }
 )
 

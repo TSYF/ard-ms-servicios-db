@@ -1,6 +1,6 @@
 import { Matcher } from "@/utils";
 
-export interface Product {
+export interface Service {
     id: number,
     images: string,
     name: string,
@@ -8,15 +8,13 @@ export interface Product {
     price: number,
     isActive: boolean,
     stock: number,
-    categoryId: number
 }
 
-export const productMatcher: Matcher = {
+export const serviceMatcher: Matcher = {
     images: "string",
     name: "string",
     description: "string",
     price: "number",
     isActive: "boolean",
     stock: "number",
-    categoryId: "number"
 };
