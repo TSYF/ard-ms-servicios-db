@@ -8,5 +8,4 @@ export const serviceModel = pgTable("service", {
     description: varchar("description").notNull(),
     price: integer("price").notNull(),
     isActive: boolean("isActive").notNull(),
-    stock: integer("stock").notNull()
 });

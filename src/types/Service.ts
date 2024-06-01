@@ -7,7 +7,6 @@ export interface Service {
     description: string,
     price: number,
     isActive: boolean,
-    stock: number,
 }
 
 export const serviceMatcher: Matcher = {
@@ -16,5 +15,4 @@ export const serviceMatcher: Matcher = {
     description: "string",
     price: "number",
     isActive: "boolean",
-    stock: "number",
 };
