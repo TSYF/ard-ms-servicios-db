@@ -6,15 +6,21 @@ import { Service, serviceMatcher } from '../types/Service';
 import { db } from '@/db';
 import { serviceModel } from '@/db/schemas';
 import { eq, inArray } from 'drizzle-orm';
+import { getService } from '@/db/utils';
 const router = express.Router();
 
 //* Index
 router.get(
     "/",
     async (req, res) => {
-        const services: Service[] = await db
+        const services: Service[] = (await db
             .select()
-            .from(serviceModel);
+            .from(serviceModel)
+            ).map(service => {
+                const newService: any = { ...service };
+                newService.images = service.images.split(",");
+                return <Service>newService;
+            });
         
         if (Array.isArray(services)) {
             res.status(200).send(services);
@@ -42,10 +48,7 @@ router.get(
     async (req, res) => {
         const { id } = req.params;
 
-        const service: Service = (await db
-            .select()
-            .from(serviceModel)
-            .where(eq(serviceModel.id, +id)))[0];
+        const service: Service = await getService(db, serviceModel, +id);
         
         console.log(service)
         console.log(id)
@@ -59,10 +62,15 @@ router.get(
     async (req, res) => {
         const { ids } = req.body;
 
-        const services: Service[] = await db
+        const services: Service[] = (await db
             .select()
             .from(serviceModel)
-            .where(inArray(serviceModel.id, ids.split(",")));
+            .where(inArray(serviceModel.id, ids.split(",")))
+            ).map(service => {
+                const newService: any = { ...service };
+                newService.images = service.images.split(",");
+                return <Service>newService;
+            });
             
         res.status(200).send(services);
     }
@@ -153,7 +161,9 @@ router.put(
 
         console.table(service);
 
-        const updatedService = (await db
+        service.images = service.images.join(",");
+
+        const updatedService: any = (await db
             .update(serviceModel)
             .set(service)
             .where(eq(serviceModel.id, +id))
@@ -178,7 +188,8 @@ router.put(
             return;
         }
 
-        res.status(200).send(updatedService);
+        updatedService.images = updatedService.images.split(",");
+        res.status(200).send(<Service>updatedService);
     }
 )
 
@@ -188,7 +199,7 @@ router.delete(
     async (req, res) => {
         const { id } = req.params;
 
-        const deletedService = (await db
+        const deletedService: any = (await db
             .delete(serviceModel)
             .where(eq(serviceModel.id, +id))
             .returning())[0];
@@ -213,7 +224,9 @@ router.delete(
             return;
         }
 
-        res.status(200).send(deletedService);
+        deletedService.images = deletedService.images.split(",");
+
+        res.status(200).send(<Service>deletedService);
     }
 )
 

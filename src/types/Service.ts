@@ -2,7 +2,7 @@ import { Matcher } from "@/utils";
 
 export interface Service {
     id: number,
-    images: string,
+    images: string[],
     name: string,
     description: string,
     minPrice: number,
@@ -12,7 +12,7 @@ export interface Service {
 
 export const serviceMatcher: Matcher = {
     images: "string",
-    name: "string",
+    name: "object",
     description: "string",
     minPrice: "number",
     maxPrice: "number",

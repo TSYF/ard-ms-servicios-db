@@ -10,3 +10,5 @@ export const serviceModel = pgTable("service", {
     maxPrice: integer("maxPrice").notNull().default(0),
     isActive: boolean("isActive").notNull(),
 });
+
+export type ServiceModel = typeof serviceModel;
