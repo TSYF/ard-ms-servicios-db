@@ -5,7 +5,8 @@ export interface Service {
     images: string,
     name: string,
     description: string,
-    price: number,
+    minPrice: number,
+    maxPrice: number,
     isActive: boolean,
 }
 
@@ -13,6 +14,7 @@ export const serviceMatcher: Matcher = {
     images: "string",
     name: "string",
     description: "string",
-    price: "number",
+    minPrice: "number",
+    maxPrice: "number",
     isActive: "boolean",
 };

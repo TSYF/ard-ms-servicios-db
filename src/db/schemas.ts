@@ -6,6 +6,7 @@ export const serviceModel = pgTable("service", {
     images: text("images").notNull(),
     name: varchar("name").notNull(),
     description: varchar("description").notNull(),
-    price: integer("price").notNull(),
+    minPrice: integer("minPrice").notNull().default(0),
+    maxPrice: integer("maxPrice").notNull().default(0),
     isActive: boolean("isActive").notNull(),
 });
