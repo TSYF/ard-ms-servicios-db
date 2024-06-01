@@ -182,6 +182,40 @@ router.put(
     }
 )
 
+//* Delete
+router.delete(
+    "/:id",
+    async (req, res) => {
+        const { id } = req.params;
+
+        const deletedService = (await db
+            .delete(serviceModel)
+            .where(eq(serviceModel.id, +id))
+            .returning())[0];
+
+
+        if (!deletedService) {
+            const CODE = 500;
+
+            const error: ErrorBody = {
+                private: "Eliminación no retorna fila eliminada",
+                public: new CommonResponseBody(
+                    false,
+                    CODE,
+                    {
+                        message: "¡Ha ocurrido un problema inesperado!"
+                    }
+                )
+            }
+            console.log(error.private);
+            console.error(error.errorObject)
+            res.status(CODE).send(error.public);
+            return;
+        }
+
+        res.status(200).send(deletedService);
+    }
+)
 
 module.exports = router;
 export default router;
