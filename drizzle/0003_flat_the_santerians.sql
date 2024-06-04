@@ -1,1 +1,0 @@
-ALTER TABLE "category" ALTER COLUMN "name" SET NOT NULL;

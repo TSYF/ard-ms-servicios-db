@@ -5,57 +5,8 @@
     {
       "idx": 0,
       "version": "6",
-      "when": 1716526116234,
-      "tag": "0000_clumsy_wolverine",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1716527194248,
-      "tag": "0001_typical_hitman",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "6",
-      "when": 1716571705991,
-      "tag": "0002_fancy_tyrannus",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "6",
-      "when": 1716576423631,
-      "tag": "0003_flat_the_santerians",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "6",
-      "when": 1716618320822,
-      "tag": "0004_sloppy_may_parker",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "6",
-      "when": 1716618413313,
-      "tag": "0005_special_master_chief",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "6",
-      "when": 1717225158478,
-      "tag": "0006_clever_lady_mastermind",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "6",
-      "when": 1717231711569,
-      "tag": "0007_reflective_warbound",
+      "when": 1717532390661,
+      "tag": "0000_sour_morbius",
       "breakpoints": true
     }
   ]

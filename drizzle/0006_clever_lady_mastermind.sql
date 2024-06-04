@@ -1,1 +1,0 @@
-ALTER TABLE "service" DROP COLUMN IF EXISTS "stock";

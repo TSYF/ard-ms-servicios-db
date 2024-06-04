@@ -1,7 +1,9 @@
+import { pgSchema } from "drizzle-orm/pg-core";
 import { text } from "drizzle-orm/pg-core";
 import { pgTable, serial, varchar, integer, boolean } from "drizzle-orm/pg-core";
+import { $schema } from '.';
 
-export const serviceModel = pgTable("service", {
+export const serviceModel = $schema.table("service", {
     id: serial("id").primaryKey(),
     images: text("images").notNull(),
     name: varchar("name").notNull(),
