@@ -1,6 +1,6 @@
 import { Matcher } from "@/utils";
 
-export interface Service {
+export interface Service extends Record<string, unknown> {
     id: number,
     images: string[],
     name: string,
