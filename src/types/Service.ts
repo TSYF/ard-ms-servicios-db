@@ -11,8 +11,8 @@ export interface Service {
 }
 
 export const serviceMatcher: Matcher = {
-    images: "string",
-    name: "object",
+    images: "object",
+    name: "string",
     description: "string",
     minPrice: "number",
     maxPrice: "number",
