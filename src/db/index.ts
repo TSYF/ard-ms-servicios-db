@@ -18,7 +18,7 @@ const client = new Client({
 });
 
 (async () => await client.connect())();
-export const $schema = pgSchema("ar");
+export const $schema = pgSchema(envs.DB_SCHEMA);
 const db = drizzle(client);
 
 export { db, client };
