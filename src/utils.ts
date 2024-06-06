@@ -1,3 +1,5 @@
+import { Service } from "./types/Service";
+
 export function matches(body: RequestBody, rules: Matcher) {
     // All keys of rules must be present, so we use that to check our body
     for (let attribute in rules) {
@@ -19,4 +21,14 @@ export interface Matcher {
 
 export interface RequestBody {
     [key: string]: unknown
+}
+
+export function parseService(service: Record<string, unknown>): Service {
+    const parsedService: Record<string, unknown> = service;
+    parsedService.images = (<string>service.images).split(","); 
+    const images = <string[]>parsedService.images;
+    if (images.length === 1 && images[0] === "") {
+        images.pop();
+    }
+    return <Service>parsedService;
 }

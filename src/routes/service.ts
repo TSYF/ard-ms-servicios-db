@@ -1,7 +1,7 @@
 import { ErrorBody } from '@/types/ErrorBody';
 import { CommonResponseBody } from '@/types/CommonResponseBody';
 import express from 'express';
-import { matches } from '@/utils';
+import { matches, parseService } from '@/utils';
 import { Service, serviceMatcher } from '../types/Service';
 import { db } from '@/db';
 import { serviceModel } from '@/db/schemas';
@@ -16,11 +16,7 @@ router.get(
         const services: Service[] = (await db
             .select()
             .from(serviceModel)
-            ).map(service => {
-                const newService: any = { ...service };
-                newService.images = service.images.split(",");
-                return <Service>newService;
-            });
+            ).map(service => parseService(service));
         
         if (Array.isArray(services)) {
             res.status(200).send(services);
@@ -48,11 +44,10 @@ router.get(
     async (req, res) => {
         const { id } = req.params;
 
-        const service: Service = await getService(db, serviceModel, +id);
+        const service = await getService(db, serviceModel, +id);
+        const parsedService = parseService(service);
         
-        console.log(service)
-        console.log(id)
-        res.status(200).send(service);
+        res.status(200).send(parsedService);
     }
 );
 
@@ -66,11 +61,7 @@ router.get(
             .select()
             .from(serviceModel)
             .where(inArray(serviceModel.id, ids.split(",")))
-            ).map(service => {
-                const newService: any = { ...service };
-                newService.images = service.images.split(",");
-                return <Service>newService;
-            });
+            ).map(service => parseService(service));
             
         res.status(200).send(services);
     }
@@ -130,14 +121,8 @@ router.post(
             return;
         }
 
-        const parsedService: Record<string, unknown> = insertedService;
-        parsedService.images = insertedService.images.split(","); 
-        const images = <string[]>parsedService.images;
-        if (images.length === 1 && images[0] === "") {
-            images.pop();
-        }
-
-        res.status(200).send(<Service><unknown>insertedService);
+        const parsedService = parseService(insertedService);
+        res.status(200).send(parsedService);
     }
 )
 
@@ -146,32 +131,10 @@ router.put(
     "/:id",
     async (req, res) => {
         const { id } = req.params;
-        const service = req.body;
-
-        if (!matches(service, serviceMatcher)) {
-            const CODE = 422;
-            
-            const error: ErrorBody = {
-                private: "La forma del cuerpo no corresponde al Servicio",
-                public: new CommonResponseBody(
-                    false,
-                    CODE,
-                    {
-                        message: "La forma del cuerpo no corresponde al Servicio"
-                    }
-                )
-            }
-            console.table(service);
-            console.log(error.private);
-            console.error(error.errorObject)
-            res.status(CODE).send(error.public);
-            return;
-        }
-
+        const service: Record<string, any> = req.body;
         console.table(service);
 
         service.images = service.images.join(",");
-
         const updatedService: any = (await db
             .update(serviceModel)
             .set(service)
@@ -197,8 +160,8 @@ router.put(
             return;
         }
 
-        updatedService.images = updatedService.images.split(",");
-        res.status(200).send(<Service>updatedService);
+        const parsedService = parseService(updatedService);
+        res.status(200).send(parsedService);
     }
 )
 
@@ -233,9 +196,8 @@ router.delete(
             return;
         }
 
-        deletedService.images = deletedService.images.split(",");
-
-        res.status(200).send(<Service>deletedService);
+        const parsedService = parseService(deletedService);
+        res.status(200).send(parsedService);
     }
 )
 
