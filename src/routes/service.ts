@@ -106,6 +106,7 @@ router.post(
 
         console.table(service);
         service.images = service.images.join(",");
+       
 
         const insertedService = (await db.insert(serviceModel).values(service).returning())[0];
 
@@ -131,6 +132,10 @@ router.post(
 
         const parsedService: Record<string, unknown> = insertedService;
         parsedService.images = insertedService.images.split(","); 
+        const images = <string[]>parsedService.images;
+        if (images.length === 1 && images[0] === "") {
+            images.pop();
+        }
 
         res.status(200).send(<Service><unknown>insertedService);
     }
