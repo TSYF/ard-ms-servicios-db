@@ -1,8 +1,8 @@
 import { ErrorBody } from '@/types/ErrorBody';
 import { CommonResponseBody } from '@/types/CommonResponseBody';
 import express from 'express';
-import { matches, parseService } from '@/utils';
-import { Service, serviceMatcher } from '../types/Service';
+import { parseService } from '@/utils';
+import { Service } from '../types/Service';
 import { db } from '@/db';
 import { serviceModel } from '@/db/schemas';
 import { eq, inArray } from 'drizzle-orm';
@@ -75,32 +75,8 @@ router.post(
         const service = req.body;
         console.table(service);
 
-        if (!matches(service, serviceMatcher)) {
-            const CODE = 422;
-            
-            const error: ErrorBody = {
-                private: "La forma del cuerpo no corresponde al Servicio",
-                public: new CommonResponseBody(
-                    false,
-                    CODE,
-                    {
-                        message: "La forma del cuerpo no corresponde al Servicio"
-                    }
-                )
-            }
-            console.table(service);
-            console.log(error.private);
-            console.error(error.errorObject)
-            res.status(CODE).send(error.public);
-            return;
-        }
-
-        console.table(service);
         service.images = service.images.join(",");
-       
-
         const insertedService = (await db.insert(serviceModel).values(service).returning())[0];
-
 
         if (!insertedService) {
             const CODE = 500;
