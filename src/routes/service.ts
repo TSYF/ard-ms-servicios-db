@@ -14,8 +14,9 @@ router.get(
     "/",
     async (req, res) => {
         const services: Service[] = (await db
-            .select()
-            .from(serviceModel)
+                .select()
+                .from(serviceModel)
+                .orderBy(serviceModel.id)
             ).map(service => parseService(service));
         
         if (Array.isArray(services)) {
