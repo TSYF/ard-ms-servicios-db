@@ -110,7 +110,10 @@ router.put(
         const service: Record<string, any> = req.body;
         console.table(service);
 
-        service.images = service.images.join(",");
+        if (service.hasOwnProperty("images")) {
+            service.images = service.images.join(",");
+        }
+        
         const updatedService: any = (await db
             .update(serviceModel)
             .set(service)
