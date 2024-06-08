@@ -1,7 +1,7 @@
 import { ErrorBody } from '@/types/ErrorBody';
 import { CommonResponseBody } from '@/types/CommonResponseBody';
 import express from 'express';
-import { parseService } from '@/utils';
+import { parseService, uploadImages } from '@/utils';
 import { Service } from '../types/Service';
 import { db } from '@/db';
 import { serviceModel } from '@/db/schemas';
@@ -76,6 +76,7 @@ router.post(
         const service = req.body;
         console.table(service);
 
+        service.images = uploadImages(service.images);
         service.images = service.images.join(",");
         const insertedService = (await db.insert(serviceModel).values(service).returning())[0];
 
