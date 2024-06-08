@@ -76,7 +76,7 @@ router.post(
         const service = req.body;
         console.table(service);
 
-        service.images = uploadImages(service.images);
+        service.images = await uploadImages(service.images);
         service.images = service.images.join(",");
         const insertedService = (await db.insert(serviceModel).values(service).returning())[0];
 

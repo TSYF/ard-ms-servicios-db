@@ -22,7 +22,9 @@ export async function uploadImages(images: string[]): Promise<string[]> {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(images)
+        body: JSON.stringify({
+            fileList: images
+        })
     }).then(res => res.json())
 }
 
