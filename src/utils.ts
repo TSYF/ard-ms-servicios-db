@@ -31,18 +31,16 @@ export async function uploadImages(images: string[]): Promise<string[]> {
 export async function updateImages(id: number, images: string[]): Promise<string[]> {
     const dbService = await getService(db, serviceModel, id);
     const service   = parseService(dbService);
+    const payload   = {
+        fileList: images,
+        oldList: service.images
+    }
     
-    const imageMap: Record<string, string> = {};
-
-    service.images.forEach((uri, index) => {
-        imageMap[uri] = images[index]
-    });
-
     return await fetch(IMAGES_ENDPOINT, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(imageMap)
+        body: JSON.stringify(payload)
     }).then(res => res.json())
 }

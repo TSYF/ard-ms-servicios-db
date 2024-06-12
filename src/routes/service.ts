@@ -1,7 +1,7 @@
 import { ErrorBody } from '@/types/ErrorBody';
 import { CommonResponseBody } from '@/types/CommonResponseBody';
 import express from 'express';
-import { parseService, uploadImages } from '@/utils';
+import { parseService, updateImages, uploadImages } from '@/utils';
 import { Service } from '../types/Service';
 import { db } from '@/db';
 import { serviceModel } from '@/db/schemas';
@@ -113,7 +113,8 @@ router.put(
         console.table(service);
 
         if (service.hasOwnProperty("images")) {
-            service.images = service.images.join(",");
+            const images = await updateImages(+id, service.images);
+            service.images = images.join(",");
         }
         
         const updatedService: any = (await db
