@@ -153,15 +153,12 @@ router.delete(
     async (req, res) => {
         const { id } = req.params;
 
-        const service = parseService(await getService(db, serviceModel, +id));
-
-        deleteImages(service.images);
-        
         const deletedService: any = (await db
             .delete(serviceModel)
             .where(eq(serviceModel.id, +id))
             .returning())[0];
-
+            
+        deleteImages(deletedService.images);
 
         if (!deletedService) {
             const CODE = 500;
